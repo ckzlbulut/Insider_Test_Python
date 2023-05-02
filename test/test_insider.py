@@ -23,7 +23,7 @@ class Test_Insider:
         self.qa_page.click_see_all_qa_jobs()
 
         self.qa_page.select_location('Istanbul, Turkey')
-        self.qa_page.assert_job_list_presence()
+        self.qa_page.assert_job_list_presence(2)
 
     def test_job_posts(self):
         self.qa_page.assert_positions_contains("quality assurance")

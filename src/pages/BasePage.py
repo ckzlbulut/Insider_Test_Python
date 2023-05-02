@@ -1,6 +1,5 @@
 from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 import selenium.webdriver.support.expected_conditions as EC
 
@@ -31,6 +30,12 @@ class BasePage():
         element = self.driver.find_elements(*locator)
         return element
 
+    def wait_job_posts_loaded(self, locator, size):
+        self.wait.until(lambda driver: len(driver.find_elements(*locator)) == size)
+
+    def wait_job_texts_loaded(self, locator):
+        self.wait.until(lambda driver: all(len(element.text.strip()) > 0 for element in driver.find_elements(*locator)))
+
     def scroll_to_element(self, locator):
         element = self.wait_visibility(locator)
         self.actions.scroll_to_element(element).perform()
@@ -45,7 +50,7 @@ class BasePage():
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
 
     def wait_presence_of_options(self, select_element, option_locator):
-        self.wait.until(lambda d: len(select_element.find_elements(*option_locator)) > 1)
+        self.wait.until(lambda driver: len(select_element.find_elements(*option_locator)) > 1)
 
     def get_new_window_handle(self, main_window, all_windows):
         return [window for window in all_windows if window != main_window][0]

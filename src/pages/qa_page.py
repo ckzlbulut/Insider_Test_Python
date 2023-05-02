@@ -37,7 +37,9 @@ class QA_Page(BasePage):
         select_element.select_by_visible_text(location)
         self.scroll_with_JS(self.POSITION_FILTER)
 
-    def assert_job_list_presence(self):
+    def assert_job_list_presence(self, size):
+        self.wait_job_posts_loaded(self.JOB_LIST, size)
+        self.wait_job_texts_loaded(self.JOB_LIST)
         job_list = self.wait_list_visibility(self.JOB_LIST)
 
         assert len(job_list) > 0
@@ -79,7 +81,7 @@ class QA_Page(BasePage):
         for job_post in job_list:
             self.actions.move_to_element(job_post).perform()
 
-            apply_button = self.wait_clickable(self.APPLY_BUTTON)
+            apply_button = job_post.find_element(*self.APPLY_BUTTON)
             apply_button.click()
 
             new_window = self.get_new_window_handle(postion_page_window, self.driver.window_handles)
